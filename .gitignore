@@ -1,0 +1,22 @@
+# Terraform: состояние и локальные плагины не коммитим (lock-файл — коммитим)
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfvars
+!*.tfvars.example
+override.tf
+override.tf.json
+
+# Ansible
+*.retry
+
+# Секреты / ключи
+*.pem
+*_ed25519
+*.key
+
+# Локальное
+.DS_Store
+tfplan
+*.tfplan

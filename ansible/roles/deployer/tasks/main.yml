@@ -1,0 +1,25 @@
+---
+- name: Создать пользователя {{ deployer_user }}
+  ansible.builtin.user:
+    name: "{{ deployer_user }}"
+    shell: "{{ deployer_shell }}"
+    groups: "{{ deployer_groups }}"
+    append: true
+    create_home: true
+    password: "!"   # пароль заблокирован, вход только по ключу
+
+- name: Положить SSH-ключ {{ deployer_user }}
+  ansible.posix.authorized_key:
+    user: "{{ deployer_user }}"
+    key: "{{ deployer_ssh_pubkey }}"
+    exclusive: true
+
+# validate: битый sudoers ломает sudo целиком, поэтому проверяем файл до установки
+- name: Разрешить sudo без пароля
+  ansible.builtin.copy:
+    dest: "/etc/sudoers.d/90-{{ deployer_user }}"
+    content: "{{ deployer_user }} ALL=(ALL) NOPASSWD:ALL\n"
+    owner: root
+    group: root
+    mode: "0440"
+    validate: /usr/sbin/visudo -cf %s

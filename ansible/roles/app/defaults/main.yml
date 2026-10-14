@@ -1,0 +1,4 @@
+---
+app_dir: /opt/app
+app_owner: deployer
+app_compose_src: "{{ playbook_dir }}/../compose/"

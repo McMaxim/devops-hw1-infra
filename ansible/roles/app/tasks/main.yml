@@ -1,0 +1,29 @@
+---
+- name: Каталог приложения {{ app_dir }}
+  ansible.builtin.file:
+    path: "{{ app_dir }}"
+    state: directory
+    owner: "{{ app_owner }}"
+    group: "{{ app_owner }}"
+    mode: "0755"
+
+- name: Скопировать docker-compose.yml и конфиги
+  ansible.builtin.copy:
+    src: "{{ app_compose_src }}"
+    dest: "{{ app_dir }}/"
+    owner: "{{ app_owner }}"
+    group: "{{ app_owner }}"
+    mode: preserve
+  register: app_files
+
+# Запуск от deployer — как это делал бы человек: docker compose up -d.
+# recreate: конфиги примонтированы в контейнеры, и при их изменении сам compose
+# контейнеры не пересоздаст (docker-compose.yml тот же) — поэтому форсируем always.
+- name: Поднять окружение (docker compose up -d)
+  community.docker.docker_compose_v2:
+    project_src: "{{ app_dir }}"
+    state: present
+    pull: missing
+    recreate: "{{ 'always' if app_files.changed else 'auto' }}"
+  become: true
+  become_user: "{{ app_owner }}"

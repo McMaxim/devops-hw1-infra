@@ -1,0 +1,9 @@
+---
+# ansible-core ставится без коллекций — тянем только те, что реально используются
+collections:
+  - name: ansible.posix       # authorized_key
+    version: ">=1.5.0"
+  - name: community.general   # ufw
+    version: ">=8.0.0"
+  - name: community.docker    # docker_compose_v2
+    version: ">=3.10.0"

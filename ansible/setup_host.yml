@@ -1,0 +1,12 @@
+---
+# Этап 3: подготовка хоста — deployer с sudo, Docker Engine + Compose, автозапуск Docker.
+# Проверка идемпотентности: второй прогон должен дать changed=0.
+- name: Настройка хоста под контейнеры
+  hosts: app_hosts
+  become: true
+  roles:
+    - base
+    - deployer
+    - ssh_hardening
+    - firewall
+    - docker

@@ -1,0 +1,23 @@
+---
+# sshd берёт первое встреченное значение, а drop-in'ы читаются по алфавиту —
+# префикс 00- гарантирует, что наши настройки победят 50-cloud-init.conf и т.п.
+- name: Запретить root и пароли в sshd
+  ansible.builtin.copy:
+    dest: /etc/ssh/sshd_config.d/00-hardening.conf
+    content: |
+      # Managed by Ansible
+      PermitRootLogin no
+      PasswordAuthentication no
+      KbdInteractiveAuthentication no
+      PubkeyAuthentication yes
+      MaxAuthTries 3
+      AllowUsers {{ ssh_allow_users | join(' ') }}
+    owner: root
+    group: root
+    mode: "0644"
+    validate: /usr/sbin/sshd -t -f %s
+  notify: Reload sshd
+
+# Применяем sshd сразу, а не в конце всего плея
+- name: Перечитать sshd немедленно
+  ansible.builtin.meta: flush_handlers

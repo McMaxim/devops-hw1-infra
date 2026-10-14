@@ -1,0 +1,5 @@
+$ ./scripts/monitor.sh docker   # локально, на Mac
+=== monitor: docker @ MacBook-Air-Maxim.local — 2026-10-14 23:19:21 ===
+WARN: systemctl не найден — на этом хосте нет systemd (например, macOS)
+WARN: /var/log/syslog не найден или нет прав на чтение — ошибки не посчитать
+exit code: 4

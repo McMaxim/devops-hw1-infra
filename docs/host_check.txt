@@ -1,0 +1,26 @@
+$ ssh deployer@192.168.139.194 'id; sudo -n true && echo ok; systemctl is-enabled docker; docker compose version'
+uid=1001(deployer) gid=1001(deployer) groups=1001(deployer),4(adm),101(systemd-journal),999(docker)
+ok
+enabled
+Docker Compose version v5.6.0
+
+$ sudo sshd -T | grep -E '^(permitrootlogin|passwordauthentication|allowusers)'
+permitrootlogin no
+passwordauthentication no
+allowusers ubuntu
+allowusers deployer
+
+$ ssh root@192.168.139.194
+root@192.168.139.194: Permission denied (publickey).
+
+$ sudo ufw status
+Status: active
+
+To                         Action      From
+--                         ------      ----
+80/tcp                     ALLOW       Anywhere                  
+8080/tcp                   ALLOW       Anywhere                  
+22/tcp                     ALLOW       192.168.138.0/23           # ssh-admin
+80/tcp (v6)                ALLOW       Anywhere (v6)             
+8080/tcp (v6)              ALLOW       Anywhere (v6)             
+

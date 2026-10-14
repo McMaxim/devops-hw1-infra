@@ -1,0 +1,13 @@
+$ ssh deployer@192.168.139.194 'uptime -p; systemctl is-enabled docker; systemctl is-active docker; docker ps'
+up 2 minutes
+enabled
+active
+NAMES         STATUS                    PORTS
+tf-nginx      Up 13 seconds (healthy)   0.0.0.0:8080->80/tcp
+app-nginx-1   Up 13 seconds             0.0.0.0:80->80/tcp
+app-app-1     Up 13 seconds (healthy)   80/tcp
+
+$ curl -s -o /dev/null -w '%{http_code}' http://192.168.139.194:8080
+200
+$ curl -s -o /dev/null -w '%{http_code}' http://192.168.139.194
+200

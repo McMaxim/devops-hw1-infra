@@ -1,0 +1,1 @@
+networks: tf_web_net=10.20.0.2 | mounts: volume:tf_nginx_html->/usr/share/nginx/html | restart: unless-stopped

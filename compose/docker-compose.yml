@@ -1,0 +1,40 @@
+# Этап 5: nginx (reverse proxy) -> app (nginx со страницей Hello World).
+# Окружение живёт в своих сетях, отдельно от сети, которую создаёт Terraform:
+#   app_frontend — сюда смотрит опубликованный порт 80 прокси;
+#   app_backend  — internal: наружу не ходит, app доступен только прокси.
+name: app
+
+services:
+  app:
+    image: nginx:1.28-alpine
+    volumes:
+      - ./app/index.html:/usr/share/nginx/html/index.html:ro
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:1.28-alpine
+    ports:
+      - "0.0.0.0:80:80"
+    volumes:
+      - ./proxy/default.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - frontend
+      - backend
+    depends_on:
+      app:
+        condition: service_healthy
+    restart: unless-stopped
+
+networks:
+  frontend:
+    name: app_frontend
+  backend:
+    name: app_backend
+    internal: true

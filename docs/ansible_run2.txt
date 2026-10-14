@@ -1,0 +1,76 @@
+
+PLAY [Настройка хоста под контейнеры] ******************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [devops-vm]
+
+TASK [base : Обновить кэш apt (не чаще раза в час)] ****************************
+ok: [devops-vm]
+
+TASK [base : Установить базовые пакеты] ****************************************
+ok: [devops-vm]
+
+TASK [base : Включить rsyslog] *************************************************
+ok: [devops-vm]
+
+TASK [deployer : Создать пользователя deployer] ********************************
+ok: [devops-vm]
+
+TASK [deployer : Положить SSH-ключ deployer] ***********************************
+ok: [devops-vm]
+
+TASK [deployer : Разрешить sudo без пароля] ************************************
+ok: [devops-vm]
+
+TASK [ssh_hardening : Запретить root и пароли в sshd] **************************
+ok: [devops-vm]
+
+TASK [ssh_hardening : Перечитать sshd немедленно] ******************************
+
+TASK [firewall : Установить ufw] ***********************************************
+ok: [devops-vm]
+
+TASK [firewall : Разрешить SSH только из доверенных сетей] *********************
+ok: [devops-vm] => (item=192.168.138.0/23)
+
+TASK [firewall : Открыть порты приложений] *************************************
+ok: [devops-vm] => (item=80)
+ok: [devops-vm] => (item=8080)
+
+TASK [firewall : Запретить остальной входящий трафик и включить ufw] ***********
+ok: [devops-vm]
+
+TASK [docker : Удалить конфликтующие пакеты] ***********************************
+ok: [devops-vm]
+
+TASK [docker : Каталог для ключей apt] *****************************************
+ok: [devops-vm]
+
+TASK [docker : Скачать GPG-ключ репозитория Docker] ****************************
+ok: [devops-vm]
+
+TASK [docker : Подключить репозиторий Docker] **********************************
+ok: [devops-vm]
+
+TASK [docker : Обновить кэш apt после добавления репозитория] ******************
+skipping: [devops-vm]
+
+TASK [docker : Установить Docker Engine и Docker Compose] **********************
+ok: [devops-vm]
+
+TASK [docker : Настроить ротацию логов контейнеров (daemon.json)] **************
+ok: [devops-vm]
+
+TASK [docker : Автозапуск containerd и docker при загрузке] ********************
+ok: [devops-vm] => (item=containerd)
+ok: [devops-vm] => (item=docker)
+
+TASK [docker : Ссылка docker-compose -> плагин compose v2] *********************
+ok: [devops-vm]
+
+TASK [docker : Добавить пользователей в группу docker] *************************
+ok: [devops-vm] => (item=deployer)
+
+PLAY RECAP *********************************************************************
+devops-vm                  : ok=21   changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+

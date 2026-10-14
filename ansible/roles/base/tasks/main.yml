@@ -1,0 +1,17 @@
+---
+# cache_valid_time: не дёргаем apt update на каждом прогоне — иначе changed != 0
+- name: Обновить кэш apt (не чаще раза в час)
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Установить базовые пакеты
+  ansible.builtin.apt:
+    name: "{{ base_packages }}"
+    state: present
+
+- name: Включить rsyslog
+  ansible.builtin.systemd_service:
+    name: rsyslog
+    enabled: true
+    state: started

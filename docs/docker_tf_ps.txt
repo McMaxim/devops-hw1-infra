@@ -1,0 +1,2 @@
+NAMES      STATUS                    PORTS                  NETWORKS
+tf-nginx   Up 25 seconds (healthy)   0.0.0.0:8080->80/tcp   tf_web_net

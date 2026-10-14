@@ -1,0 +1,19 @@
+HTTP/1.1 200 OK
+Server: nginx/1.28.3
+Date: Wed, 14 Oct 2026 20:19:43 GMT
+Content-Type: text/html
+Content-Length: 240
+Connection: keep-alive
+Last-Modified: Wed, 14 Oct 2026 17:58:58 GMT
+ETag: "6acfc2e2-f0"
+Accept-Ranges: bytes
+X-Served-By: reverse-proxy
+
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Hello World</title></head>
+<body>
+  <h1>Hello World</h1>
+  <p>Served by the <code>app</code> container behind the nginx reverse proxy (docker compose).</p>
+</body>
+</html>

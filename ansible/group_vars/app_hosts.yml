@@ -1,0 +1,15 @@
+---
+# Пользователь для деплоя: sudo без пароля + группа docker
+deployer_user: deployer
+deployer_ssh_pubkey: "{{ lookup('ansible.builtin.file', '~/.ssh/devops_hw_ed25519.pub') }}"
+
+# Аналог Security Group: SSH пускаем только из сети OrbStack, через которую ходит Mac,
+# наружу открыты только порты приложений.
+firewall_ssh_allowed_from:
+  - "192.168.138.0/23"
+firewall_open_ports:
+  - "80"     # docker compose: nginx reverse proxy
+  - "8080"   # terraform: nginx в отдельной сети
+
+docker_users:
+  - "{{ deployer_user }}"

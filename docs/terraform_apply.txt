@@ -1,0 +1,14 @@
+docker_volume.html: Creating...
+docker_network.web: Creating...
+docker_image.nginx: Creating...
+docker_image.nginx: Creation complete after 0s [id=sha256:a8b39bd9cf0f83869a2162827a0caf6137ddf759d50a171451b335cecc87d236nginx:1.28-alpine]
+docker_volume.html: Creation complete after 0s [id=tf_nginx_html]
+docker_network.web: Creation complete after 2s [id=30ae8fac3afcaf78223c12a8b85fbe8df7da1386255088c6ff561246f8310eb9]
+docker_container.nginx: Creating...
+docker_container.nginx: Creation complete after 1s [id=106e88a7696cdc36d3084eb46dd49f4bff6f52d8324776328730d5f41cf9ec04]
+Apply complete! Resources: 4 added, 0 changed, 0 destroyed.
+Outputs:
+container_name = "tf-nginx"
+network_name = "tf_web_net"
+nginx_url = "http://192.168.139.194:8080"
+volume_name = "tf_nginx_html"

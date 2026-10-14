@@ -1,0 +1,7 @@
+---
+deployer_user: deployer
+deployer_shell: /bin/bash
+# adm — чтение /var/log/syslog, systemd-journal — journalctl без sudo (для monitor.sh)
+deployer_groups:
+  - adm
+  - systemd-journal

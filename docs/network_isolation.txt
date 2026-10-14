@@ -1,0 +1,6 @@
+$ docker exec tf-nginx wget -qO- -T 3 http://app   # другая сеть — имя app не резолвится
+wget: bad address 'app'
+$ docker exec app-app-1 wget -qO- -T 3 http://example.com   # internal-сеть — нет выхода наружу
+wget: bad address 'example.com'
+$ docker exec app-nginx-1 wget -qO- -T 3 http://app | grep h1   # прокси видит app
+  <h1>Hello World</h1>

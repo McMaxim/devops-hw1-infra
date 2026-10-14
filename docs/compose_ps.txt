@@ -1,0 +1,17 @@
+$ docker-compose ps
+NAME          IMAGE               COMMAND                  SERVICE   CREATED         STATUS                    PORTS
+app-app-1     nginx:1.28-alpine   "/docker-entrypoint.…"   app       2 minutes ago   Up 22 seconds (healthy)   80/tcp
+app-nginx-1   nginx:1.28-alpine   "/docker-entrypoint.…"   nginx     2 minutes ago   Up 22 seconds             0.0.0.0:80->80/tcp
+
+$ docker network ls
+NETWORK ID     NAME           DRIVER    SCOPE
+ea021e7c1ca1   app_backend    bridge    local
+df810562d09b   app_frontend   bridge    local
+0571aed2d2f2   bridge         bridge    local
+31786123b150   host           host      local
+439e57e761d4   none           null      local
+30ae8fac3afc   tf_web_net     bridge    local
+
+app_backend: internal=true containers: app-app-1 app-nginx-1 
+app_frontend containers: app-nginx-1 
+tf_web_net containers: tf-nginx 

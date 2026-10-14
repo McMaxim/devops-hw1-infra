@@ -1,0 +1,36 @@
+$ ./monitor.sh docker
+=== monitor: docker @ devops-vm — 2026-10-14 23:19:20 ===
+✓ сервис docker: active
+--- ошибок в /var/log/syslog за последний час: 95
+exit code: 0
+
+$ sudo systemctl stop docker.socket docker && ./monitor.sh docker
+=== monitor: docker @ devops-vm — 2026-10-14 23:19:20 ===
+✗ сервис docker: inactive
+--- последние 10 строк журнала docker ---
+Oct 14 23:19:20 devops-vm dockerd[334]: time="2026-10-14T23:19:20.320828615+03:00" level=info msg="stopping restart-manager" container=106e88a7696cdc36d3084eb46dd49f4bff6f52d8324776328730d5f41cf9ec04
+Oct 14 23:19:20 devops-vm dockerd[334]: time="2026-10-14T23:19:20.320885198+03:00" level=info msg="stopping restart-manager" container=e51f1cb318d1c12c5b0449b149dd0f1d947224c5f2793028e71f0d285890eda8
+Oct 14 23:19:20 devops-vm dockerd[334]: time="2026-10-14T23:19:20.320984323+03:00" level=info msg="stopping restart-manager" container=d5c3c22c5cb40f575333107286f36c77b685d59789af139db089dd3c92494d56
+Oct 14 23:19:20 devops-vm dockerd[334]: time="2026-10-14T23:19:20.367475073+03:00" level=info msg="received task-delete event from containerd" container=d5c3c22c5cb40f575333107286f36c77b685d59789af139db089dd3c92494d56 module=libcontainerd namespace=moby topic=/tasks/delete type="*events.TaskDelete"
+Oct 14 23:19:20 devops-vm dockerd[334]: time="2026-10-14T23:19:20.628401032+03:00" level=info msg="stopping event stream following graceful shutdown" error="grpc: the client connection is closing: context canceled" module=libcontainerd namespace=moby
+Oct 14 23:19:20 devops-vm dockerd[334]: time="2026-10-14T23:19:20.633472948+03:00" level=info msg="Daemon shutdown complete"
+Oct 14 23:19:20 devops-vm dockerd[334]: time="2026-10-14T23:19:20.633570115+03:00" level=info msg="stopping event stream following graceful shutdown" error="context canceled" module=libcontainerd namespace=plugins.moby
+Oct 14 23:19:20 devops-vm systemd[1]: docker.service: Deactivated successfully.
+Oct 14 23:19:20 devops-vm systemd[1]: Stopped Docker Application Container Engine.
+Oct 14 23:19:20 devops-vm systemd[1]: docker.service: Consumed 1.750s CPU time.
+--- ошибок в /var/log/syslog за последний час: 101
+exit code: 1
+
+$ ./monitor.sh nosuchservice
+=== monitor: nosuchservice @ devops-vm — 2026-10-14 23:19:21 ===
+✗ сервис nosuchservice не найден
+--- ошибок в /var/log/syslog за последний час: 104
+exit code: 3
+
+$ ./monitor.sh "docker;rm -rf /"
+ERROR: недопустимое имя сервиса: 'docker;rm -rf /'
+exit code: 2
+
+$ ./monitor.sh
+Usage: monitor.sh <service>
+exit code: 2

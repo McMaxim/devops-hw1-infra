@@ -1,0 +1,18 @@
+
+PLAY [Деплой docker compose окружения] *****************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [devops-vm]
+
+TASK [app : Каталог приложения /opt/app] ***************************************
+ok: [devops-vm]
+
+TASK [app : Скопировать docker-compose.yml и конфиги] **************************
+ok: [devops-vm]
+
+TASK [app : Поднять окружение (docker compose up -d)] **************************
+ok: [devops-vm]
+
+PLAY RECAP *********************************************************************
+devops-vm                  : ok=4    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

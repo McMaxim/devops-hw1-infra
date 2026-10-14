@@ -1,0 +1,79 @@
+---
+- name: Удалить конфликтующие пакеты
+  ansible.builtin.apt:
+    name: "{{ docker_conflicting_packages }}"
+    state: absent
+
+- name: Каталог для ключей apt
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: "0755"
+
+- name: Скачать GPG-ключ репозитория Docker
+  ansible.builtin.get_url:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    dest: /etc/apt/keyrings/docker.asc
+    mode: "0644"
+
+- name: Подключить репозиторий Docker
+  ansible.builtin.deb822_repository:
+    name: docker
+    types: [deb]
+    uris: https://download.docker.com/linux/ubuntu
+    suites: ["{{ ansible_facts['distribution_release'] }}"]
+    components: [stable]
+    architectures: ["{{ docker_apt_arch }}"]
+    signed_by: /etc/apt/keyrings/docker.asc
+  register: docker_repo
+
+# Кэш обновляем только если репозиторий только что добавили — это сохраняет идемпотентность
+- name: Обновить кэш apt после добавления репозитория
+  ansible.builtin.apt:
+    update_cache: true
+  when: docker_repo.changed
+
+- name: Установить Docker Engine и Docker Compose
+  ansible.builtin.apt:
+    name: "{{ docker_packages }}"
+    state: present
+
+- name: Настроить ротацию логов контейнеров (daemon.json)
+  ansible.builtin.copy:
+    dest: /etc/docker/daemon.json
+    content: "{{ docker_daemon_config | to_nice_json }}\n"
+    owner: root
+    group: root
+    mode: "0644"
+  vars:
+    docker_daemon_config:
+      log-driver: json-file
+      log-opts:
+        max-size: 10m
+        max-file: "3"
+  notify: Restart docker
+
+- name: Автозапуск containerd и docker при загрузке
+  ansible.builtin.systemd_service:
+    name: "{{ item }}"
+    enabled: true
+    state: started
+  loop:
+    - containerd
+    - docker
+
+# Чтобы в задании буквально работала команда `docker-compose up -d`:
+# бинарь плагина compose v2 умеет работать и как standalone
+- name: Ссылка docker-compose -> плагин compose v2
+  ansible.builtin.file:
+    src: /usr/libexec/docker/cli-plugins/docker-compose
+    dest: /usr/local/bin/docker-compose
+    state: link
+
+# Группа docker == фактически root на хосте; даём её только deployer'у
+- name: Добавить пользователей в группу docker
+  ansible.builtin.user:
+    name: "{{ item }}"
+    groups: docker
+    append: true
+  loop: "{{ docker_users }}"

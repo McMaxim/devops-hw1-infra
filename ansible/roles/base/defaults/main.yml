@@ -1,0 +1,5 @@
+---
+base_packages:
+  - ca-certificates
+  - rsyslog         # нужен /var/log/syslog для monitor.sh
+  - python3-debian  # нужен модулю deb822_repository

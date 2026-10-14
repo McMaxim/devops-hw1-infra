@@ -1,0 +1,5 @@
+# Скопируйте в terraform.tfvars и поменяйте под себя
+vm_host         = "192.168.139.194"
+ssh_private_key = "~/.ssh/devops_hw_ed25519"
+external_port   = 8080
+network_subnet  = "10.20.0.0/24"
